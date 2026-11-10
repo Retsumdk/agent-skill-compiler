@@ -1,0 +1,26 @@
+agent-skill-compiler demo
+========================
+
+resolved order: textutils -> web-fetch -> summarizer
+unit textutils@1.2.0 (key 8d7dc889b79a)
+  tools: text.normalize
+  deps: (none)
+unit web-fetch@0.4.1 (key 4a15d8e76858)
+  tools: text.normalize, web.fetch
+  deps: textutils
+unit summarizer@2.0.0 (key badfc4264a3a)
+  tools: text.normalize, web.fetch, llm.summarize
+  deps: textutils, web-fetch
+
+summarizer instructions:
+  - Normalize whitespace before any text analysis.
+  - Fetch the URL in {{url}} and return the page text.
+  - Summarize {{page}} in five bullet points.
+
+execution plan: 3 batches, 3 steps
+  batch 1: text.normalize
+  batch 2: web.fetch
+  batch 3: llm.summarize
+
+cache after first compile: {"entries":3,"hits":0,"misses":3}
+second compile: cacheHits=3 cacheMisses=0

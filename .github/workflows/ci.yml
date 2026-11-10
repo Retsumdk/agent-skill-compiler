@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install
+      - run: bunx tsc --noEmit
+      - run: bunx tsc -p tsconfig.test.json --noEmit
+      - run: bun test
+      - run: bun src/demo.ts | diff demo-output.txt - && echo DEMO_STABLE
+      - run: bunx tsc && test -f dist/index.js && test -f dist/cli.js && test -f dist/index.d.ts && echo BUILD_OK
+
+  node-install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install github:Retsumdk/agent-skill-compiler
+      - run: node -e "import('agent-skill-compiler').then(m => { if (typeof m.compile !== 'function') process.exit(1); console.log('GH_INSTALL_OK'); })"
