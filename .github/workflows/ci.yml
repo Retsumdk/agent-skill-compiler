@@ -27,5 +27,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm install github:Retsumdk/agent-skill-compiler
-      - run: node -e "import('agent-skill-compiler').then(m => { if (typeof m.compile !== 'function') process.exit(1); console.log('GH_INSTALL_OK'); })"
+      - run: mkdir -p /tmp/probe && cd /tmp/probe && npm init -y >/dev/null && npm install github:Retsumdk/agent-skill-compiler
+      - run: cd /tmp/probe && node -e "import('agent-skill-compiler').then(m => { if (typeof m.compile !== 'function') process.exit(1); console.log('GH_INSTALL_OK'); })"
